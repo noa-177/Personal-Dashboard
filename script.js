@@ -59,3 +59,24 @@ function setSalary() {
     alert('Please enter a valid salary.');
   }
 }
+
+// ---- Add Expense ----
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const newItem = {
+    id: Date.now(), // <-- unique ID
+    category: categoryInput.value.trim(),
+    amount: parseFloat(amountInput.value),
+    type: 'expense'
+  };
+  if (!isNaN(newItem.amount) && newItem.category) {
+    const data = getData();
+    data.push(newItem);
+    saveData(data);
+    refreshUI();
+    form.reset();
+  } else {
+    alert('Please enter a valid category and amount.');
+  }
+});
+
