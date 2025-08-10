@@ -193,3 +193,13 @@ async function updateConvertedBalance() {
       `Remaining balance: ${remainingETB.toFixed(2)} ETB (conversion unavailable)`;
   }
 }
+
+// ---- Clear All ----
+function clearAll() {
+  if (confirm('Are you sure you want to clear all expenses?')) {
+    let data = getData().filter(item => item.type === 'salary');
+    saveData(data);
+    refreshUI();
+    alert("All expenses have been cleared!");
+  }
+}
