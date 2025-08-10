@@ -31,3 +31,18 @@ let expenseTable;
 function initDataTable() {
   expenseTable = $('#expense-table').DataTable();
 }
+
+// ---- Update Table ----
+function updateExpenseList() {
+  const expenses = getData().filter(i => i.type === 'expense');
+
+  expenseTable.clear(); // Clear table
+  expenses.forEach((item, index) => {
+    expenseTable.row.add([
+      `<strong>${item.category}</strong>`,
+      item.amount.toFixed(2),
+      `<button class="btn btn-sm btn-danger delete-btn" data-index="${index}">Delete</button>`
+    ]);
+  });
+  expenseTable.draw();
+}
