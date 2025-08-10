@@ -80,3 +80,18 @@ form.addEventListener('submit', (e) => {
   }
 });
 
+// ---- Update Table ----
+function updateExpenseList() {
+  const expenses = getData().filter(i => i.type === 'expense');
+
+  expenseTable.clear();
+  expenses.forEach((item) => {
+    expenseTable.row.add([
+      `<strong>${item.category}</strong>`,
+      item.amount.toFixed(2),
+      `<button class="btn btn-sm btn-danger delete-btn" data-id="${item.id}">Delete</button>`
+    ]);
+  });
+  expenseTable.draw();
+}
+
