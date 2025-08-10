@@ -28,6 +28,7 @@ function getCategoryColor(category) {
   const hue = hash % 360;
   return `hsl(${hue}, 70%, 80%)`;
 }
+
 // ---- DataTable ----
 let expenseTable;
 function initDataTable() {
@@ -106,6 +107,7 @@ $('#expense-table').on('click', '.delete-btn', function() {
   refreshUI();
 });
 
+
 // ---- Charts ----
 function updateCharts() {
   const data = getData();
@@ -154,6 +156,7 @@ async function fetchCurrencyRates() {
   if (!data.success) throw new Error(data.error.info);
   return data.quotes;
 }
+
 async function updateConvertedBalance() {
   const data = getData();
   const salaryItem = data.find(i => i.type === 'salary');
@@ -204,6 +207,17 @@ function clearAll() {
   }
 }
 
+// ---- Refresh everything ----
+function refreshUI() {
+  updateExpenseList();
+  updateCharts();
+  updateConvertedBalance();
+}
+
+// ---- Init ----
+currencySelect.addEventListener("change", updateConvertedBalance);
+window.setSalary = setSalary;
+
 $(document).ready(() => {
   initDataTable();
   refreshUI();
@@ -215,3 +229,4 @@ document.getElementById('clear-storage').addEventListener('click', () => {
     alert('All data cleared!');
   }
 });
+
