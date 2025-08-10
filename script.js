@@ -46,3 +46,16 @@ function updateExpenseList() {
   });
   expenseTable.draw();
 }
+
+// ---- Salary ----
+function setSalary() {
+  const salary = parseFloat(salaryInput.value);
+  if (!isNaN(salary)) {
+    const data = getData().filter(item => item.type !== 'salary');
+    data.unshift({ type: 'salary', amount: salary, category: 'Salary' });
+    saveData(data);
+    refreshUI();
+  } else {
+    alert('Please enter a valid salary.');
+  }
+}
