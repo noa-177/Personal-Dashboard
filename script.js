@@ -95,3 +95,12 @@ function updateExpenseList() {
   expenseTable.draw();
 }
 
+// ---- Delete Expense ----
+$('#expense-table').on('click', '.delete-btn', function() {
+  const id = $(this).data('id'); // <-- use unique ID
+  let data = getData();
+  data = data.filter(item => item.id !== id); // <-- delete by ID
+  saveData(data);
+  refreshUI();
+});
+
