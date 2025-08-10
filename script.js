@@ -26,3 +26,8 @@ function getCategoryColor(category) {
   const hue = hash % 360;
   return `hsl(${hue}, 70%, 80%)`;
 }
+// ---- DataTable ----
+let expenseTable;
+function initDataTable() {
+  expenseTable = $('#expense-table').DataTable();
+}
