@@ -203,3 +203,15 @@ function clearAll() {
     alert("All expenses have been cleared!");
   }
 }
+
+$(document).ready(() => {
+  initDataTable();
+  refreshUI();
+});
+document.getElementById('clear-storage').addEventListener('click', () => {
+  if (confirm('Are you sure you want to delete all stored data?')) {
+    localStorage.removeItem('budgetData');
+    refreshUI(); // Refresh charts, table, and balance
+    alert('All data cleared!');
+  }
+});
