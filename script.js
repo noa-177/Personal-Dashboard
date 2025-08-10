@@ -8,3 +8,11 @@ const currencySelect = document.getElementById('currency-select');
 const cardSalary = document.getElementById('card-salary');
 const cardExpenses = document.getElementById('card-expenses');
 const cardRemaining = document.getElementById('card-remaining');
+
+// LocalStorage helpers
+function getData() {
+  return JSON.parse(localStorage.getItem('budgetData')) || [];
+}
+function saveData(data) {
+  localStorage.setItem('budgetData', JSON.stringify(data));
+}
