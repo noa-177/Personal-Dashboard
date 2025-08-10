@@ -1,3 +1,5 @@
+//const API_KEY = "8491557dd2fc3c6f6c46f401b5e99c57"; // CurrencyLayer API Key
+
 // DOM Elements
 const form = document.getElementById('budget-form');
 const categoryInput = document.getElementById('category');
@@ -144,3 +146,50 @@ function updateCharts() {
   });
 }
 
+// ---- Currency Conversion ----
+async function fetchCurrencyRates() {
+  const url = `https://api.currencylayer.com/live?access_key=${API_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error.info);
+  return data.quotes;
+}
+async function updateConvertedBalance() {
+  const data = getData();
+  const salaryItem = data.find(i => i.type === 'salary');
+  const salary = salaryItem ? salaryItem.amount : 0;
+  const expenses = data.filter(i => i.type === 'expense');
+  const totalExpenses = expenses.reduce((sum, i) => sum + i.amount, 0);
+  const remainingETB = salary - totalExpenses;
+  const selectedCurrency = currencySelect.value;
+
+  cardSalary.innerText = `${salary.toFixed(2)} ETB`;
+  cardExpenses.innerText = `${totalExpenses.toFixed(2)} ETB`;
+  cardRemaining.innerText = `${remainingETB.toFixed(2)} ETB`;
+
+  try {
+    const rates = await fetchCurrencyRates();
+    const usdToEtb = rates["USDETB"];
+    if (!usdToEtb) return;
+
+    if (selectedCurrency === "ETB") {
+      document.getElementById("converted-balance").innerText =
+        `Remaining balance: ${remainingETB.toFixed(2)} ETB`;
+      return;
+    }
+
+    const usdToTarget = rates["USD" + selectedCurrency];
+    if (!usdToTarget) return;
+
+    const remainingInUSD = remainingETB / usdToEtb;
+    const converted = (remainingInUSD * usdToTarget).toFixed(2);
+
+    document.getElementById("converted-balance").innerText =
+      `Remaining balance: ${remainingETB.toFixed(2)} ETB ≈ ${converted} ${selectedCurrency}`;
+    cardRemaining.innerText =
+      `${remainingETB.toFixed(2)} ETB ≈ ${converted} ${selectedCurrency}`;
+  } catch {
+    document.getElementById("converted-balance").innerText =
+      `Remaining balance: ${remainingETB.toFixed(2)} ETB (conversion unavailable)`;
+  }
+}
