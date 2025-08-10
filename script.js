@@ -104,3 +104,43 @@ $('#expense-table').on('click', '.delete-btn', function() {
   refreshUI();
 });
 
+// ---- Charts ----
+function updateCharts() {
+  const data = getData();
+  const salaryItem = data.find(i => i.type === 'salary');
+  const salary = salaryItem ? salaryItem.amount : 0;
+  const expenses = data.filter(i => i.type === 'expense');
+  const totalExpenses = expenses.reduce((sum, i) => sum + i.amount, 0);
+
+  const categories = {};
+  expenses.forEach(i => {
+    categories[i.category] = (categories[i.category] || 0) + i.amount;
+  });
+
+  const categoryData = Object.entries(categories).map(([category, amount]) => ({
+    name: category,
+    y: amount,
+    color: getCategoryColor(category)
+  }));
+
+  Highcharts.chart('pie-chart', {
+    chart: { type: 'pie' },
+    title: { text: 'Budget Breakdown' },
+    series: [{
+      name: 'Budget',
+      data: [
+        ...categoryData,
+        { name: 'Remaining', y: Math.max(salary - totalExpenses, 0), color: '#999' }
+      ]
+    }]
+  });
+
+  Highcharts.chart('bar-chart', {
+    chart: { type: 'column' },
+    title: { text: 'Expenses by Category' },
+    xAxis: { categories: Object.keys(categories) },
+    yAxis: { title: { text: 'Amount' } },
+    series: [{ name: 'Expense', data: categoryData }]
+  });
+}
+
