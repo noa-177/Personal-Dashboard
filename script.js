@@ -16,3 +16,13 @@ function getData() {
 function saveData(data) {
   localStorage.setItem('budgetData', JSON.stringify(data));
 }
+
+// Category color
+function getCategoryColor(category) {
+  let hash = 0;
+  for (let i = 0; i < category.length; i++) {
+    hash = category.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = hash % 360;
+  return `hsl(${hue}, 70%, 80%)`;
+}
